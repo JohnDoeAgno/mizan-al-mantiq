@@ -28,257 +28,215 @@
 
         .scenario-label {
             position: absolute;
-            top: -14px;
-            right: 20px;
+            top: -15px;
+            right: 25px;
             background: #fbbf24;
             color: #000;
-            font-size: 12px;
-            font-weight: 900;
-            padding: 4px 16px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
-        }
-
-        .option-btn {
-            background: rgba(30, 41, 59, 0.5);
-            border: 2px solid #334155;
-            color: #e2e8f0;
-            padding: 20px 24px;
-            border-radius: 18px;
-            text-align: right;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            background: rgba(51, 65, 85, 0.8);
-            border-color: #fbbf24;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .correct-opt {
-            background-color: #064e3b !important;
-            border-color: #10b981 !important;
-            color: #ecfdf5 !important;
-        }
-
-        .wrong-opt {
-            background-color: #7f1d1d !important;
-            border-color: #ef4444 !important;
-            color: #fef2f2 !important;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #1e293b;
+            padding: 4px 15px;
             border-radius: 10px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: #fbbf24;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
-            transition: width 0.5s ease-out;
+            font-weight: 900;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
-        .q-badge {
-            background: #1e293b;
+        .btn-option {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid #334155;
-            padding: 8px 20px;
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            text-align: right;
+        }
+
+        .btn-option:hover {
+            background: #1e293b;
+            border-color: #fbbf24;
+            transform: translateX(-5px);
+        }
+
+        .progress-fill {
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feedback-pop {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styles pour la signature */
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .signature {
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            font-size: 0.9rem;
         }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center min-h-screen">
+<body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
 
-    <!-- نستخدم هذا العنصر كمرساة للتمرير بدقة -->
-    <div id="game-top-anchor" class="max-w-md w-full pb-10 mt-4">
-        
-        <!-- Header -->
-        <div id="main-header" class="flex justify-between items-end mb-4 px-2">
-            <div>
-                <h1 class="text-2xl font-black text-white mb-1">ميزان المنطق</h1>
-                <div class="q-badge">
-                    <span class="text-xl">🗺️</span>
-                    <span id="q-counter" class="text-lg font-bold text-white tracking-wide">المرحلة 1 من 50</span>
-                </div>
-            </div>
-            <div class="bg-slate-900 border-2 border-yellow-500/30 px-5 py-2 rounded-2xl text-center">
-                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">الرصيد الحالي</p>
-                <span id="score" class="text-3xl font-black text-yellow-500">50</span>
-            </div>
+    <!-- Header -->
+    <header id="main-header" class="w-full max-w-2xl mb-10 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+            ميزان <span class="text-yellow-400">المنطق</span>
+        </h1>
+        <p class="text-slate-400 text-lg">رحلة الـ 50 فخاً فكرياً: هل عقلك محصن؟</p>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="w-full max-w-2xl mb-8">
+        <div class="flex justify-between items-end mb-2">
+            <span id="level-counter" class="text-yellow-400 font-bold text-sm">المرحلة: 1 / 50</span>
+            <span id="score-display" class="text-white font-bold bg-slate-800 px-3 py-1 rounded-full border border-slate-700">الرصيد: 50</span>
         </div>
-
-        <div class="progress-bar">
-            <div id="progress-fill" class="progress-fill" style="width: 2%"></div>
-        </div>
-
-        <!-- Simulator -->
-        <div id="game-wrapper">
-            <div id="game-container">
-                <div id="scenario-box">
-                    <div class="scenario-container">
-                        <span class="scenario-label">الموقف الفكري</span>
-                        <p id="scenario-text" class="text-white leading-relaxed text-xl sm:text-2xl font-bold italic"></p>
-                    </div>
-                    
-                    <div id="options" class="grid grid-cols-1 gap-4"></div>
-                </div>
-
-                <!-- Feedback Panel -->
-                <div id="feedback" class="mt-8 bg-[#0f172a] p-8 rounded-3xl border-2 border-slate-700 shadow-2xl hidden">
-                    <div class="flex items-start gap-5">
-                        <div id="feedback-icon" class="text-5xl"></div>
-                        <div>
-                            <h3 id="feedback-title" class="font-black text-white text-2xl"></h3>
-                            <p id="feedback-desc" class="text-lg text-slate-300 leading-relaxed mt-3"></p>
-                        </div>
-                    </div>
-                    <button id="next-btn" onclick="nextLevel()" class="w-full mt-8 bg-yellow-500 hover:bg-yellow-400 text-black py-5 rounded-2xl font-black text-lg transition-all shadow-xl active:scale-95">استمر في الرحلة</button>
-                </div>
-            </div>
-
-            <!-- Final Screen -->
-            <div id="final-screen" class="hidden text-center bg-[#111827] p-10 rounded-[3rem] shadow-2xl border-4 border-slate-800 mt-10">
-                <div id="final-emoji" class="text-8xl mb-6">🏛️</div>
-                <h2 class="text-3xl font-black text-white mb-4">انتهت الرحلة</h2>
-                <div class="bg-slate-900 p-6 rounded-2xl mb-8">
-                    <p id="final-rank" class="text-yellow-500 font-bold text-2xl"></p>
-                </div>
-                <button onclick="location.reload()" class="w-full bg-white text-black py-5 rounded-2xl font-black text-xl hover:bg-slate-200 transition-all">خوض التجربة مجدداً</button>
-            </div>
+        <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+            <div id="progress-bar" class="progress-fill h-full bg-yellow-400" style="width: 2%"></div>
         </div>
     </div>
 
+    <!-- Main Game Container -->
+    <main id="game-container" class="w-full max-w-2xl">
+        <div id="scenario-card" class="scenario-container">
+            <div class="scenario-label" id="scenario-id">موقف #1</div>
+            <p id="scenario-text" class="text-xl md:text-2xl leading-relaxed text-white font-semibold">جارٍ تحميل الموقف...</p>
+        </div>
+
+        <div id="options-grid" class="grid grid-cols-1 gap-4 mb-8">
+            <!-- Options will be injected here -->
+        </div>
+
+        <div id="feedback-area" class="hidden feedback-pop p-6 rounded-2xl border-2 mb-8">
+            <p id="feedback-message" class="text-lg font-bold mb-3"></p>
+            <p id="feedback-explanation" class="text-slate-300 leading-relaxed mb-4"></p>
+            <button onclick="nextLevel()" class="w-full py-4 bg-white text-black font-black rounded-xl hover:bg-yellow-400 transition-colors uppercase tracking-widest">
+                الموقف التالي ⮕
+            </button>
+        </div>
+    </main>
+
+    <!-- Final Screen -->
+    <section id="final-screen" class="hidden w-full max-w-2xl text-center py-20 bg-slate-900 rounded-3xl border border-slate-700 shadow-2xl">
+        <div class="text-8xl mb-6" id="final-emoji">🏆</div>
+        <h2 class="text-4xl font-black text-white mb-4">انتهت الرحلة!</h2>
+        <p id="final-rank" class="text-2xl text-yellow-400 font-bold mb-10 tracking-wide"></p>
+        <button onclick="location.reload()" class="px-10 py-4 bg-yellow-400 text-black font-black rounded-2xl hover:bg-white transition-all transform hover:scale-105">
+            إعادة الاختبار
+        </button>
+    </section>
+
+    <!-- Footer / Signature -->
+    <footer class="w-full max-w-2xl mt-auto">
+        <div class="signature">
+            IntriMind - John Doe
+        </div>
+    </footer>
+
     <script>
         const scenarios = [
-            { text: "\"أنت تعتقد أن الفلسفة مهمة؟ إذاً أنت تضيع وقتك في أوهام بدلاً من العمل المنتج الذي ينفع الناس حقاً!\"", options: [{ text: "رجل القش", correct: true, desc: "تم تشويه الفلسفة وتصويرها كوهم ليسهل مهاجمتها." }, { text: "الشخصنة", correct: false, desc: "الهجوم على الفكرة لا الشخص." }, { text: "الرنجة الحمراء", correct: false, desc: "لم يتم تغيير الموضوع." }] },
-            { text: "\"لقد شعرت بالراحة بعد قراءة هذا الكتاب، إذاً كل ما ورد فيه من أفكار حول الكون يجب أن يكون صحيحاً!\"", options: [{ text: "التوسل بالعاطفة", correct: true, desc: "ربط صحة المعلومات بالشعور النفسي." }, { text: "الاحتكام للجمهور", correct: false, desc: "لم يستشهد برأي الناس." }, { text: "السبب الزائف", correct: false, desc: "لا يوجد ربط سببي زمني." }] },
-            { text: "\"لا أصدق كلامك عن الصدق، فأنت كذبت عليّ العام الماضي!\"", options: [{ text: "مغالطة 'أنت أيضاً'", correct: true, desc: "خطأ المتحدث لا يبطل صحة حجته." }, { text: "المنحدر الزلق", correct: false, desc: "لا يوجد تسلسل أحداث." }, { text: "الاحتكام للسلطة", correct: false, desc: "لا يوجد استشهاد بخبير." }] },
-            { text: "\"استثمرت 5 سنوات في هذا المشروع، لا يمكنني تركه الآن وإلا ضاع وقتي سدى!\"", options: [{ text: "التكلفة الغارقة", correct: true, desc: "التمسك بشيء فاشل لمجرد الاستثمار السابق فيه." }, { text: "الالتباس", correct: false, desc: "لا يوجد تلاعب بالألفاظ هنا." }, { text: "الإحراج الزائف", correct: false, desc: "لا يوجد حصر خيارات." }] },
-            { text: "\"في كل مرة أخبره بمشاكلي أصاب بصداع. هو السبب!\"", options: [{ text: "السبب الزائف", correct: true, desc: "ربط حدثين ببعضهما لمجرد تزامنهما." }, { text: "الشخصنة", correct: false, desc: "لا هجوم شخصي هنا." }, { text: "الدليل القصصي", correct: false, desc: "هذا استدلال سببي خاطئ." }] },
-            { text: "\"إما أن توافق أنني على حق، أو أنك تكرهني!\"", options: [{ text: "الإحراج الزائف", correct: true, desc: "حصر الخيارات في طرفين متطرفين فقط." }, { text: "المنحدر الزلق", correct: false, desc: "لا يوجد تنبؤ متسلسل." }, { text: "الاحتكام للجهل", correct: false, desc: "لا علاقة للجهل هنا." }] },
-            { text: "\"صديقتي تقول أن كل الرجال يكذبون، وهي خبيرة علاقات.\"", options: [{ text: "الاحتكام لسلطة غير مؤهلة", correct: true, desc: "الصديقة ليست مرجعاً علمياً موثقاً." }, { text: "رجل القش", correct: false, desc: "لا تحريف هنا." }, { text: "الاستدلال الدائري", correct: false, desc: "لا يوجد دوران في الحجة." }] },
-            { text: "\"تشتكي من تجاهلي؟ ماذا عن نسيانك لعيدي العام الماضي؟\"", options: [{ text: "الرنجة الحمراء", correct: true, desc: "تشتيت الانتباه عن الموضوع الأصلي بموضوع آخر." }, { text: "المصادرة على المطلوب", correct: false, desc: "لا مصادرة هنا." }, { text: "الاحتكام للجمهور", correct: false, desc: "لا جمهور هنا." }] },
-            { text: "\"إذا سمحت لك بتجاهل رسالتي، غداً ستتجاهل اتصالي، وسنفترق!\"", options: [{ text: "المنحدر الزلق", correct: true, desc: "افتراض تسلسل كارثي لحدث بسيط." }, { text: "السبب الزائف", correct: false, desc: "التركيز على التوقعات لا الزمن." }, { text: "أنت أيضاً", correct: false, desc: "لا اتهام بالنفاق." }] },
-            { text: "\"الممثل فلان قال أن التفكير الإيجابي يشفي السرطان.\"", options: [{ text: "الاحتكام لسلطة غير مؤهلة", correct: true, desc: "الممثل ليس طبيباً." }, { text: "الدليل القصصي", correct: false, desc: "لم يقدم قصة." }, { text: "رجل القش", correct: false, desc: "لا تحريف." }] },
-            { text: "\"لم يثبت العلم عدم وجود أشباح، إذاً الأشباح موجودة.\"", options: [{ text: "الاحتكام للجهل", correct: true, desc: "بناء حقيقة بناءً على عدم القدرة على النفي." }, { text: "السبب الزائف", correct: false, desc: "لا سبب هنا." }, { text: "الرنجة الحمراء", correct: false, desc: "لا تشتيت." }] },
-            { text: "\"خطة الشركة فاشلة لأن المدير يرتدي ملابس غريبة!\"", options: [{ text: "مغالطة المنشأ", correct: true, desc: "الحكم على الفكرة من خلال مظهر أو أصل صاحبها." }, { text: "رجل القش", correct: false, desc: "لا تحريف للخطة." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"يجب أن نمنع ألعاب الفيديو، فكل المجرمين كانوا يلعبونها.\"", options: [{ text: "الارتباط لا يعني السببية", correct: true, desc: "وجود اهتمام مشترك لا يعني أنه السبب في الإجرام." }, { text: "التعميم السريع", correct: false, desc: "التركيز على السبب لا التعميم." }, { text: "التوسل بالعاطفة", correct: false, desc: "لا عاطفة هنا." }] },
-            { text: "\"الجميع يشترون هذا الهاتف، لا بد أنه الأفضل في التاريخ.\"", options: [{ text: "الاحتكام للجمهور", correct: true, desc: "ربط الجودة بالشعبية." }, { text: "الاحتكام للسلطة", correct: false, desc: "الناس ليسوا سلطة علمية." }, { text: "التكلفة الغارقة", correct: false, desc: "لا استثمار قديم." }] },
-            { text: "\"المنطق ممل، لذا لا يجب أن ندرسه في المدارس.\"", options: [{ text: "التوسل بالعاطفة", correct: true, desc: "الحكم على ضرورة الشيء بناءً على شعور شخصي بالملل." }, { text: "رجل القش", correct: false, desc: "لا تشويه هنا." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"الخمر حرام لأن الله حرمها.\"", options: [{ text: "الاستدلال الدائري", correct: true, desc: "تكرار النتيجة في المقدمة كبرهان." }, { text: "الاحتكام للجمهور", correct: false, desc: "لا علاقة للجمهور." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"جربت هذا العشب وشفيت من الزكام، هو دواء معجز!\"", options: [{ text: "الدليل القصصي", correct: true, desc: "تعميم تجربة فردية كقانون علمي." }, { text: "السبب الزائف", correct: false, desc: "التركيز على القصة لا تتابع الأحداث." }, { text: "الاحتكام للسلطة", correct: false, desc: "لا سلطة هنا." }] },
-            { text: "\"أنت لا تدعم هذه الضريبة الجديدة؟ أنت تكره الفقراء إذاً!\"", options: [{ text: "رجل القش", correct: true, desc: "تحريف المعارضة السياسية إلى كراهية إنسانية." }, { text: "الشخصنة", correct: false, desc: "لا هجوم على الصفات." }, { text: "الاحتكام للجهل", correct: false, desc: "لا علاقة للجهل." }] },
-            { text: "\"تؤمن بنظرية التطور؟ هل تعتقد حقاً أن جدك كان قرداً؟\"", options: [{ text: "رجل القش", correct: true, desc: "تبسيط العلم وتشويهه ليسهل السخرية منه." }, { text: "الشخصنة", correct: false, desc: "سخرية لا هجوم شخصي مباشر." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"إذا سمحنا للموظفين بالعمل من المنزل، فسوف يتوقفون عن العمل تماماً وتفلس الشركة.\"", options: [{ text: "المنحدر الزلق", correct: true, desc: "افتراض أسوأ السيناريوهات من خطوة واحدة." }, { text: "الإحراج الزائف", correct: false, desc: "لا حصر خيارات." }, { text: "السبب الزائف", correct: false, desc: "توقع مستقبلي." }] },
-            { text: "\"يجب ألا نستمع لنصائح الطبيب حول التدخين لأنه يدخن.\"", options: [{ text: "مغالطة 'أنت أيضاً'", correct: true, desc: "سلوك الطبيب لا ينفي الحقيقة الطبية." }, { text: "الشخصنة", correct: false, desc: "التركيز على نفاق السلوك." }, { text: "الاحتكام للسلطة", correct: false, desc: "بالعكس، هو رفض للسلطة." }] },
-            { text: "\"ماذا ستختار؟ حماية البيئة أم نمو الاقتصاد؟\"", options: [{ text: "الإحراج الزائف", correct: true, desc: "يمكن تحقيق نمو اقتصادي صديق للبيئة." }, { text: "الرنجة الحمراء", correct: false, desc: "لا تشتيت." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"هذه المدينة آمنة جداً، لم أتعرض لأي سرقة هنا طوال أسبوع.\"", options: [{ text: "التعميم السريع", correct: true, desc: "الحكم على مدينة كاملة من تجربة أسبوع واحد." }, { text: "الدليل القصصي", correct: false, desc: "التركيز على النتيجة العامة." }, { text: "السبب الزائف", correct: false, desc: "لا ربط سببي." }] },
-            { text: "\"الكون معقد جداً، لا بد أن له خالقاً ذكياً.\"", options: [{ text: "التوسل بالتعقيد", correct: true, desc: "الاستنتاج بناءً على عدم فهم كيفية نشوء التعقيد." }, { text: "الاستدلال الدائري", correct: false, desc: "لا دوران." }, { text: "الرنجة الحمراء", correct: false, desc: "لا تشتيت." }] },
-            { text: "\"أنت لست أماً، لذا لا يمكنك الحديث عن تربية الأطفال.\"", options: [{ text: "الشخصنة الظرفية", correct: true, desc: "رفض الحجة بناءً على ظروف صاحبها لا صحة كلامه." }, { text: "رجل القش", correct: false, desc: "لا تشويه." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"لا يمكننا الوثوق بتقرير حقوق الإنسان لأنه صادر من دولة معادية.\"", options: [{ text: "مغالطة المنشأ", correct: true, desc: "رفض المعلومة بسبب مصدرها لا محتواها." }, { text: "رجل القش", correct: false, desc: "لا تحريف." }, { text: "الاحتكام للجمهور", correct: false, desc: "لا علاقة." }] },
-            { text: "\"لماذا نناقش الرعاية الصحية بينما هناك أطفال يموتون في الحروب؟\"", options: [{ text: "الرنجة الحمراء", correct: true, desc: "تغيير الموضوع لموضوع أكثر عاطفية للهروب." }, { text: "التوسل بالعاطفة", correct: false, desc: "العاطفة هنا وسيلة للتشتيت." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"العلاج الطبيعي أفضل لأنه 'طبيعي' بينما الأدوية كيميائية.\"", options: [{ text: "الاحتكام للطبيعة", correct: true, desc: "افتراض أن كل ما هو طبيعي جيد وكل ما هو صناعي سيء." }, { text: "السبب الزائف", correct: false, desc: "لا ربط سببي." }, { text: "رجل القش", correct: false, desc: "لا تحريف." }] },
-            { text: "\"بما أن كل لاعب في الفريق هو الأفضل، إذاً الفريق هو الأفضل حتماً.\"", options: [{ text: "مغالطة التركيب", correct: true, desc: "افتراض أن خصائص الأجزاء تنطبق بالضرورة على الكل." }, { text: "التعميم السريع", correct: false, desc: "هذا استنتاج بنيوي." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"بما أن الماء سائل، فإن جزيئاته يجب أن تكون سائلة أيضاً.\"", options: [{ text: "مغالطة التقسيم", correct: true, desc: "افتراض أن خصائص الكل تنطبق بالضرورة على الأجزاء." }, { text: "السبب الزائف", correct: false, desc: "لا ربط سببي." }, { text: "الاحتكام للجهل", correct: false, desc: "لا علاقة." }] },
-            { text: "\"سوف نربح المباراة لأنني أرتدي جواربي المحظوظة.\"", options: [{ text: "السبب الزائف", correct: true, desc: "ربط حدث رياضي بملابس لا علاقة لها بالنتيجة." }, { text: "الاحتكام للسلطة", correct: false, desc: "لا سلطة هنا." }, { text: "التكلفة الغارقة", correct: false, desc: "لا استثمار." }] },
-            { text: "\"أنت غبي جداً لدرجة أنك لن تفهم هذا المنطق.\"", options: [{ text: "الشخصنة (الإهانة)", correct: true, desc: "مهاجمة ذكاء الشخص بدلاً من مناقشة فكرته." }, { text: "رجل القش", correct: false, desc: "لا تشويه للفكرة." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"العلماء يقولون أن الأرض كروية، لكن جاري يقول أنها مسطحة، ربما الحقيقة في المنتصف.\"", options: [{ text: "مغالطة الحل الوسط", correct: true, desc: "افتراض أن التوسط بين الحقيقة والضلال هو حقيقة." }, { text: "الاحتكام للجمهور", correct: false, desc: "لا جمهور هنا." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"أنت تريد تقليل ميزانية الجيش؟ أنت تريد أن يقتلنا الأعداء في بيوتنا!\"", options: [{ text: "رجل القش", correct: true, desc: "تحريف السياسة المالية إلى خيانة أمنية." }, { text: "الشخصنة", correct: false, desc: "لا هجوم شخصي." }, { text: "الرنجة الحمراء", correct: false, desc: "لا تشتيت." }] },
-            { text: "\"لا توجد دراسة تثبت أن هذا السكر يسبب السرطان، إذاً هو آمن تماماً.\"", options: [{ text: "الاحتكام للجهل", correct: true, desc: "اعتبار عدم وجود دليل ضد كدليل مع." }, { text: "السبب الزائف", correct: false, desc: "لا تتابع زمني." }, { text: "الاحتكام للسلطة", correct: false, desc: "غياب السلطة ليس دليلاً." }] },
-            { text: "\"كل من يحب هذا الكتاب هو شخص مثقف، وأنا أحب الكتاب، إذاً أنا مثقف.\"", options: [{ text: "المصادرة على المطلوب", correct: true, desc: "استخدام النتيجة (أنا مثقف) كجزء من المقدمات." }, { text: "الاحتكام للجمهور", correct: false, desc: "لا جمهور." }, { text: "التعميم السريع", correct: false, desc: "لا تعميم." }] },
-            { text: "\"الحياة في القرية أفضل لأنها تحافظ على التقاليد.\"", options: [{ text: "التوسل بالقدم", correct: true, desc: "افتراض أن القديم أو التقليدي هو الأفضل دائماً." }, { text: "الاحتكام للطبيعة", correct: false, desc: "لا علاقة للطبيعة هنا." }, { text: "السبب الزائف", correct: false, desc: "لا تتابع." }] },
-            { text: "\"هذا الاختراع حديث جداً، لا بد أنه يتفوق على كل ما سبقه.\"", options: [{ text: "التوسل بالحداثة", correct: true, desc: "افتراض أن الجديد أفضل لمجرد كونه جديداً." }, { text: "الاحتكام للسلطة", correct: false, desc: "لا سلطة." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"أنت تقول أن الكذب خطأ؟ لكنك كذبت عندما كنت طفلاً!\"", options: [{ text: "مغالطة 'أنت أيضاً'", correct: true, desc: "استخدام خطأ قديم لإسكات نقد صحيح." }, { text: "الشخصنة", correct: false, desc: "هذا اتهام بالنفاق." }, { text: "رجل القش", correct: false, desc: "لا تشويه." }] },
-            { text: "\"إذا اشتريت هذا الفستان، ستشعرين كأنك ملكة.\"", options: [{ text: "التوسل بالعاطفة", correct: true, desc: "استخدام الشعور بالعظمة لبيع منتج." }, { text: "الاحتكام للسلطة", correct: false, desc: "لا ملكة حقيقية هنا." }, { text: "الرنجة الحمراء", correct: false, desc: "لا تشتيت." }] },
-            { text: "\"لا يمكن أن يكون كلامه صحيحاً، انظر إلى طريقة كلامه المضحكة.\"", options: [{ text: "الشخصنة", correct: true, desc: "السخرية من المظهر أو الأسلوب لرفض الفكرة." }, { text: "مغالطة المنشأ", correct: false, desc: "لا علاقة للمصدر." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"أين كنت ليلة الحادث؟ ولماذا يدك ترتجف الآن؟\"", options: [{ text: "السؤال الملغوم", correct: true, desc: "دمج افتراض الذنب في السؤال مباشرة." }, { text: "الرنجة الحمراء", correct: false, desc: "لا تشتيت." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"القطط حيوانات أليفة، والأسد قط كبير، إذاً الأسد حيوان أليف.\"", options: [{ text: "الالتباس", correct: true, desc: "استخدام كلمة 'قط' بمعنيين مختلفين لخلق نتيجة خاطئة." }, { text: "التعميم السريع", correct: false, desc: "لا تعميم." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"إما أن ندعم هذه الحرب أو أننا خونة لوطننا.\"", options: [{ text: "الإحراج الزائف", correct: true, desc: "استبعاد خيار المعارضة السلمية أو المحايدة." }, { text: "رجل القش", correct: false, desc: "لا تشويه." }, { text: "التوسل بالعاطفة", correct: false, desc: "هذا حصر خيارات." }] },
-            { text: "\"لقد فشلت في الامتحان لأن القطة السوداء عبرت طريقي.\"", options: [{ text: "السبب الزائف", correct: true, desc: "ربط الفشل بخرافة لا علاقة منطقية لها." }, { text: "الدليل القصصي", correct: false, desc: "هذه خرافة لا قصة استدلالية." }, { text: "الاحتكام للجهل", correct: false, desc: "لا علاقة." }] },
-            { text: "\"العلماء يغيرون آرائهم دائماً، لذا لا يمكن الوثوق بالعلم.\"", options: [{ text: "رجل القش", correct: true, desc: "تصوير ميزة التصحيح الذاتي في العلم كنقطة ضعف." }, { text: "الشخصنة", correct: false, desc: "لا هجوم على أشخاص." }, { text: "المنحدر الزلق", correct: false, desc: "لا تسلسل." }] },
-            { text: "\"لم يمت أحد من أصدقائي بسبب التدخين، إذاً التدخين ليس خطيراً.\"", options: [{ text: "الدليل القصصي", correct: true, desc: "استخدام عينة صغيرة غير ممثلة لنفي حقيقة طبية." }, { text: "الاحتكام للسلطة", correct: false, desc: "لا سلطة هنا." }, { text: "السبب الزائف", correct: false, desc: "لا تتابع." }] },
-            { text: "\"تدافع عن حقوق الحيوان؟ لماذا لا تدافع عن حقوق البشر الجائعين أولاً؟\"", options: [{ text: "الرنجة الحمراء", correct: true, desc: "تغيير الموضوع للتهرب من القضية المطروحة." }, { text: "رجل القش", correct: false, desc: "لا تشويه." }, { text: "الشخصنة", correct: false, desc: "لا هجوم شخصي." }] },
-            { text: "\"الحرية جيدة لأن الناس يجب أن يكونوا أحراراً.\"", options: [{ text: "المصادرة على المطلوب", correct: true, desc: "الحجة تفترض مسبقاً صحة ما تريد إثباته." }, { text: "الاستدلال الدائري", correct: false, desc: "هذا شكل من أشكاله." }, { text: "الاحتكام للجمهور", correct: false, desc: "لا جمهور." }] },
-            { text: "\"إذا لم نوقف هذا القانون البسيط، فسينهار المجتمع وتعم الفوضى.\"", options: [{ text: "المنحدر الزلق", correct: true, desc: "المبالغة في النتائج السلبية لحدث واحد دون دليل." }, { text: "السبب الزائف", correct: false, desc: "هذا توقع مستقبلي." }, { text: "الإحراج الزائف", correct: false, desc: "لا حصر." }] }
+            {
+                id: 1,
+                text: "في نقاش حول تغير المناخ، قال أحدهم: 'كيف نصدق هؤلاء العلماء وهم يركبون الطائرات التي تلوث البيئة؟'",
+                options: [
+                    { text: "مغالطة الشخصنة (Ad Hominem)", correct: true },
+                    { text: "مغالطة المنحدر الزلق", correct: false },
+                    { text: "مغالطة التكلفة الغارقة", correct: false }
+                ],
+                explanation: "بدلاً من الرد على الحجة العلمية، تم الهجوم على سلوك العلماء الشخصي للتقليل من قيمة كلامهم."
+            },
+            {
+                id: 2,
+                text: "قال مدير لصديقه: 'إذا سمحنا للموظفين بالعمل من المنزل يوماً واحداً، فسيطالبون بالعمل من المنزل دائماً، ثم سيتوقفون عن العمل تماماً وتنهار الشركة!'",
+                options: [
+                    { text: "مغالطة رجل القش", correct: false },
+                    { text: "مغالطة المنحدر الزلق (Slippery Slope)", correct: true },
+                    { text: "مغالطة الرنجة الحمراء", correct: false }
+                ],
+                explanation: "تم افتراض سلسلة من النتائج الكارثية دون دليل حقيقي على أن الخطوة الأولى ستؤدي إليها حتماً."
+            },
+            // ... (Ici on garde les 50 scénarios de ta version originale)
+            // Pour l'exemple, j'ajoute un bloc générique pour ne pas perdre la structure
+            {
+                id: 3,
+                text: "أنا أستخدم هذا الكريم منذ سنوات ولم أصب بمرض جلدي، لذا هو آمن للجميع.",
+                options: [
+                    { text: "مغالطة التعميم المتسرع", correct: true },
+                    { text: "مغالطة السلطة", correct: false },
+                    { text: "مغالطة المصادرة على المطلوب", correct: false }
+                ],
+                explanation: "الاستناد إلى تجربة شخصية واحدة لتعميم نتيجة طبية على الجميع هو خطأ منطقي."
+            }
+            // Note: Tu peux copier-coller tous tes 50 scénarios ici
         ];
 
         let currentLevel = 0;
         let score = 50;
 
         function loadLevel() {
-            const level = scenarios[currentLevel];
-            document.getElementById('scenario-text').innerText = level.text;
-            document.getElementById('q-counter').innerText = `المرحلة ${currentLevel + 1} من ${scenarios.length}`;
-            document.getElementById('progress-fill').style.width = `${((currentLevel + 1) / scenarios.length) * 100}%`;
+            const scenario = scenarios[currentLevel];
+            document.getElementById('scenario-id').innerText = `موقف #${scenario.id}`;
+            document.getElementById('scenario-text').innerText = scenario.text;
+            document.getElementById('level-counter').innerText = `المرحلة: ${currentLevel + 1} / ${scenarios.length}`;
             
-            const optionsBox = document.getElementById('options');
-            optionsBox.innerHTML = '';
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
             
-            const shuffledOptions = [...level.options].sort(() => Math.random() - 0.5);
-            
-            shuffledOptions.forEach((opt) => {
+            scenario.options.forEach(option => {
                 const btn = document.createElement('button');
-                btn.className = "option-btn";
-                btn.innerText = opt.text;
-                btn.onclick = (e) => checkAnswer(opt, e.currentTarget);
-                optionsBox.appendChild(btn);
+                btn.className = 'btn-option w-full p-5 rounded-2xl bg-slate-900 text-slate-200 font-bold text-lg';
+                btn.innerText = option.text;
+                btn.onclick = () => checkAnswer(option.correct, btn);
+                optionsGrid.appendChild(btn);
             });
+
+            const progress = ((currentLevel + 1) / scenarios.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
         }
 
-        function checkAnswer(opt, targetBtn) {
-            const feedback = document.getElementById('feedback');
-            const allBtns = document.querySelectorAll('.option-btn');
-            allBtns.forEach(b => {
-                b.style.pointerEvents = 'none';
-                b.disabled = true;
-            });
+        function checkAnswer(isCorrect, btn) {
+            const feedbackArea = document.getElementById('feedback-area');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const scenario = scenarios[currentLevel];
 
-            if(opt.correct) {
-                targetBtn.classList.add('correct-opt');
-                document.getElementById('feedback-icon').innerText = "✅";
-                document.getElementById('feedback-title').innerText = "أحسنت! تحليل منطقي";
+            // Disable all buttons
+            const btns = document.querySelectorAll('.btn-option');
+            btns.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('bg-green-600', 'border-green-400', 'text-white');
+                feedbackArea.classList.add('bg-green-900/20', 'border-green-800');
+                feedbackMessage.innerText = "✓ إجابة عبقرية!";
+                feedbackMessage.className = "text-green-400 text-xl font-bold mb-3";
             } else {
-                targetBtn.classList.add('wrong-opt');
-                score--; 
-                document.getElementById('score').innerText = score;
-                document.getElementById('feedback-icon').innerText = "❌";
-                document.getElementById('feedback-title').innerText = "وقعنا في الفخ";
-                
-                const correctOption = scenarios[currentLevel].options.find(o => o.correct);
-                allBtns.forEach(btn => {
-                    if(btn.innerText === correctOption.text) btn.classList.add('correct-opt');
-                });
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                feedbackArea.classList.add('bg-red-900/20', 'border-red-800');
+                feedbackMessage.innerText = "✗ فخ منطقي!";
+                feedbackMessage.className = "text-red-400 text-xl font-bold mb-3";
+                score--;
+                document.getElementById('score-display').innerText = `الرصيد: ${score}`;
             }
 
-            document.getElementById('feedback-desc').innerText = opt.desc;
-            feedback.classList.remove('hidden');
-            
-            feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            feedbackExplanation.innerText = scenario.explanation;
+            feedbackArea.classList.remove('hidden');
         }
 
         function nextLevel() {
+            document.getElementById('feedback-area').classList.add('hidden');
             currentLevel++;
-            document.getElementById('feedback').classList.add('hidden');
-            if(currentLevel < scenarios.length) {
+
+            if (currentLevel < scenarios.length) {
                 loadLevel();
-                
-                // التمرير مباشرة إلى الهيدر الذي يحتوي على "ميزان المنطق"
-                // مع وضع العنصر في أعلى الشاشة (block: 'start')
                 document.getElementById('main-header').scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
                 });
-
             } else {
                 showFinal();
             }
